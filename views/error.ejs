@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Generator</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-inline: hidden;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+
+            background: linear-gradient(180deg, rgba(18, 28, 53, 0) 0%, #000000 0.01%, #121C35 100%);
+        }
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            z-index: -100;
+            width: 75%;
+            height: 80%;
+            top: -30%;
+            border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
+            background: linear-gradient(45deg,hsl(243 50% 14% / 0.1) 30%, hsl(246 40% 21% / 0.75), hsl(243 50% 14% / 0.1) 60%);
+            filter: blur(20px);
+            
+        }
+        body::before {
+            left: -30%;
+        }
+        body::after {
+            right: 0;
+        }
+
+        .hero {
+            
+            margin-block-start: 3rem;
+            width: min(1280px,100% - 1rem);
+            margin-inline: auto;
+            text-align: start;
+
+            
+            display: grid;
+            gap: 2rem;
+            align-items: center;
+            grid-template-areas: 
+            'image'
+            'content';
+
+            & > .heroContent {
+                grid-area: content;
+            }
+
+            & > .heroContent > * + * {
+                margin-top: 2rem;
+            }
+
+
+            & .heroContent h1 {
+                color: #333;
+                font-size: 3rem;
+                background: linear-gradient(rgba(126, 131, 250, 1) 25%, rgba(21, 0, 149, 1));
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            & .heroContent p {
+                color: rgba(158, 158, 158, 1);
+                font-size: 1.125rem;
+                max-width: 550px;
+            }
+            & .heroContent button {
+                border: none;
+                color: hsl(0 0% 100%);
+                font-size: 1.25rem;
+                padding: .625em 1.125em;
+                border-radius: 9px;
+                background: linear-gradient(rgb(8,72,236), rgba(0, 24, 86, 1));
+
+                cursor: pointer;
+            }
+            & .heroImage img {
+                width: 100%;
+            }
+        }
+
+        @media (width > 900px) {
+            .hero {
+                grid-template-areas: 'content image';
+            }
+        }
+
+
+        label {
+            color: rgba(158, 158, 158, 1);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #000000;
+            border-style: none;
+            border-radius: 10px;
+            color: white;
+        }
+
+         button {
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            max-width: max-content;
+            margin-inline: auto;
+        } 
+        .tableWrapper {
+            width: min(1024px,100%);
+            margin: 20px auto;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            color: white;
+
+            margin: 20px auto;
+            background: #323232;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-collapse: collapse;
+            border: none;
+        }
+
+        caption, th, td {
+            padding: 1rem ;
+            text-align: left;
+        }
+
+        th,td {
+            font-size: 1rem;
+        }
+        th {
+            background-color: #4caf50;
+            background: hsl(0 0% 0% / 0.5);
+        }
+
+        tr:nth-child(even) {
+            background-color: hsl(0 0% 0% / 0.1);
+        }
+
+        caption {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: hsl(0 0% 0% / 0.75);
+            text-transform: uppercase;
+
+        }
+
+        .gridWrapper {
+            width: min(1280px,100% - 1rem);
+            margin-inline: auto;
+            
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(275px,1fr));
+            gap: 1rem;
+
+            & > * {
+                display: flex;
+                gap: 0.5rem;
+
+
+                & > label {
+                    align-self: center;
+                }
+                & >input {
+                    flex: 1;
+                }
+            }
+        }
+        .white{
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="heroContent">
+            <h1>TCSC Time Table Generator</h1>
+            <p></p>
+            <button onclick="generateTimetable()">Generate Timetable</button>
+        </div>
+        <!-- <div class="heroImage">
+            <img src="img/heroImage.png" alt="">
+        </div> -->
+    </div>
+
+
+    <h1 class="white">Select Subjects</h1>
+    <div class="gridWrapper">
+        <div class="inputHolder">
+            <label for="subject9AM"></label>
+            <input type="text" id="subject9AM" placeholder="Enter subject name for 9 AM">
+        </div>
+        <div class="inputHolder">
+            <label for="subject10AM"></label>
+            <input type="text" id="subject10AM" placeholder="Enter subject name for 10 AM">
+        </div>
+        <div class="inputHolder">
+            <label for="subject11AM"></label>
+            <input type="text" id="subject11AM" placeholder="Enter subject name for 11 AM">
+        </div>
+        <div class="inputHolder">
+            <label for="subject12PM"></label>
+            <input type="text" id="subject12PM" placeholder="Enter subject name for 12 PM">
+        </div>
+        <div class="inputHolder">
+            <label for="subject1PM"></label>
+            <input type="text" id="subject1PM" placeholder="Enter subject name for 1 PM">
+        </div>
+    </div>
+
+    <div class="tableWrapper">
+        <table id="timetable">
+            
+        </table>
+    </div>
+
+    
+
+    <script>
+        function generateTimetable() {
+            var subject9AM = document.getElementById('subject9AM').value.trim();
+            var subject10AM = document.getElementById('subject10AM').value.trim();
+            var subject11AM = document.getElementById('subject11AM').value.trim();
+            var subject12PM = document.getElementById('subject12PM').value.trim();
+            var subject1PM = document.getElementById('subject1PM').value.trim();
+
+            if (!subject9AM || !subject10AM || !subject11AM || !subject12PM || !subject1PM) {
+                alert("Please enter valid input for all subjects");
+                return;
+            }
+
+            document.getElementById('timetable').innerHTML = "";
+
+            var table = "<caption>Time Table</caption><tr><th>Time/Day</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr>";
+
+            var subjects = shuffle([subject9AM, subject10AM, subject11AM, subject12PM, subject1PM]);
+            var days = ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM'];
+
+            for (var i = 0; i < subjects.length; i++) {
+                table += "<tr><td>" + days[i] + "</td>";
+                for (var j = 0; j < 5; j++) {
+                    table += "<td>" + subjects[(i + j) % subjects.length] + "</td>";
+                }
+                table += "</tr>";
+            }
+
+            document.getElementById('timetable').innerHTML = table;
+        }
+
+        function shuffle(array) {
+            var currentIndex = array.length, randomIndex;
+
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+
+            return array;
+        }
+
+        // let hover = document.querySelector('body');
+        // hover.onmousemove = function (e) {
+        //         hover.style.cssText = background: radial-gradient(circle at ${e.clientX}px ${e.clientY}px,rgba(226, 50, 255, 0.5) 0%,rgba(226, 50, 255, 0.5) 2%,transparent 10%), linear-gradient(180deg,black 0%,#181818 60%);
+        // }
+
+
+        
+        // textHover.onmousemove = function (e) {
+        //         // e = Mouse click event.
+        //         let rect = e.target.getBoundingClientRect();
+        //         let x = e.clientX - rect.left; //x position within the element.
+        //         let y = e.clientY - rect.top;  //y position within the element.
+        //         console.log("Left? : " + x + " ; Top? : " + y + ".");
+        //         textHover.style.cssText = `background: radial-gradient(circle at ${x}px ${y}px,rgba(226, 50, 255, 0.5) 0%,rgba(226, 50, 255, 0.5) 2%,transparent 10%),
+        //                                     linear-gradient(180deg,black 0%,#181818 60%);`
+        // }
+        // textHover.onmouseleave = function (e) {
+        //     textHover.style.cssText = `background: radial-gradient(circle at 0px 0px,rgba(226, 50, 255, 0) 0%,rgba(226, 50, 255, 0) 10%,transparent 35%),
+        //                                     linear-gradient(180deg,black 0%,#181818 60%);`
+        // }
+    </script>
+
+</body>
+</html>
